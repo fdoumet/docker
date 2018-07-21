@@ -1,0 +1,3 @@
+helm install --name nextcloud-db --set mysqlRootPassword=r00t,mysqlUser=nextcloud,mysqlPassword=nextcloud,mysqlDatabase=nextcloud stable/mysql
+
+chsh -s /bin/bash www-data
