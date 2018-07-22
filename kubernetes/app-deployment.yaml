@@ -35,10 +35,20 @@ spec:
           name: nextcloud-data
         - mountPath: /var/www/html/themes/mlvx
           name: nextcloud-theme
+        - name: config-volume
+          mountPath: /var/www/html/config/config.php
+          subPath: php-config
+          readOnly: false
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "chown -R www-data:www-data /var/www/html/data"]
+              command: ["/bin/sh", "-c", "chown -R www-data:www-data /var/www/html/data; \
+              mkdir /etc/config/; \
+              cp /var/www/html/config/config.php /etc/config/config.php; \
+              chown -R www-data:www-data /etc/config"]
+        env:
+        - name: NEXTCLOUD_CONFIG_DIR
+          value: /etc/config
       restartPolicy: Always
       volumes:
       - name: nextcloud
@@ -56,4 +66,7 @@ spec:
       - name: nextcloud-theme
         persistentVolumeClaim:
           claimName: nextcloud-theme
+      - name: config-volume
+        configMap:
+          name: nextcloud-config
 status: {}
